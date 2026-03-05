@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arc of Expansion - City Index</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f8f9fa;
+            --text: #333;
+            --card-bg: #fff;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        h1 {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+        }
+        .city-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        @media (max-width: 900px) {
+            .city-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .city-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .city-card {
+            background: var(--card-bg);
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        .city-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
+            color: var(--accent);
+        }
+        .city-card::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin-right: 12px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Arc of Expansion</h1>
+            <p class="subtitle">Select a city to view its expansion map</p>
+        </header>
+        <div class="city-grid" id="cityGrid">
+            <!-- Cities will be injected here -->
+        </div>
+    </div>
+
+    <script>
+        const cities = [
+            "Abilene-TX", "Albany-NY", "Albuquerque-NM", "Alexandria-LA", "Altoona-PA", "Amarillo-TX", "Anchorage-AK", "Anniston-AL", "Appleton-WI", "Asheville-NC", "Athens-GA", "Atlanta-GA", "Auburn-AL", "Augusta-GA", "Austin-TX", "Bakersfield-CA", "Bangor-ME", "Baton Rouge-LA", "Battle Creek-MI", "Beaumont-TX", "Bellingham-WA", "Benton-Harbor-MI", "Bethlehem-PA", "Billings-MT", "Biloxi-MS", "Binghamton-NY", "Birmingham-AL", "Bismarck-ND", "Bloomington-IN", "Boise-ID", "Boston-MA", "Brownsville-TX", "Bryan-TX", "Buffalo-NY", "Burlington-VT", "Canton-OH", "Cedar Rapids-IA", "Champaign-IL", "Charleston-SC", "Charlotte-NC", "Charlottesville-VA", "Chattanooga-TN", "Chicago-IL", "Cincinnati-OH", "Clarksville-TN", "Cleveland-OH", "Colorado Springs-CO", "Columbia-MO", "Columbia-SC", "Columbus-GA", "Columbus-OH", "Corpus Christi-TX", "Corvallis-OR", "Cumberland-MD", "Dallas-TX", "Danville-VA", "Davenport-IA", "Dayton-OH", "Daytona-Beach-FL", "Decatur-AL", "Decatur-IL", "Denver-CO", "Des Moines-IA", "Detroit-MI", "Dothan-AL", "Dover-DE", "Dubuque-IA", "Duluth-MN", "Eau-Claire-WI", "El Paso-TX", "Elkhart-IN", "Elmira-NY", "Enid-OK", "Eugene-OR", "Evansville-IN", "Fargo-ND", "Fayetteville-AR", "Fayetteville-NC", "Flagstaff-AZ", "Florence-AL", "Florence-SC", "Fort Collins-CO", "Fort Myers-FL", "Fort Wayne-IN", "Fort-Pierce-FL", "Fort-Smith-AR", "Fort-Walton-Beach-FL", "Fresno-CA", "Gadsden-AL", "Gainesville-FL", "Glens Falls-NY", "Goldsboro-NC", "Grand Rapids-MI", "Grand-Forks-ND", "Grand-Junction-CO", "Great-Falls-MT", "Green-Bay-WI", "Greenville-NC", "Greenville-SC", "Harrisburg-PA", "Hartford-CT", "Hattiesburg-MS", "Hickory-NC", "Honolulu-HI", "Houma-LA", "Houston-TX", "Huntsville-AL", "Indianapolis-IN", "Iowa City-IA", "Jackson-MI", "Jackson-MS", "Jackson-TN", "Jacksonville-FL", "Jamestown-NY", "Janesville-WI", "Johnson-City-TN", "Johnstown-PA", "Jonesboro-AR", "Joplin-MO", "Kansas City-MO", "Knoxville-TN", "La-Crosse-WI", "Lafayette-IN", "Lafayette-LA", "Lake-Charles-LA", "Lakeland-FL", "Lancaster-PA", "Lansing-MI", "Las Vegas-NV", "Las-Cruces-NM", "Lawrence-KS", "Lawton-OK", "Lewiston-ME", "Lexington-KY", "Lima-OH", "Lincoln-NE", "Little Rock-AR", "Longview-TX", "Los Angeles-CA", "Louisville-KY", "Lubbock-TX", "Lynchburg-VA", "Macon-GA", "Madison-WI", "Mansfield-OH", "McAllen-TX", "Medford-OR", "Melbourne-FL", "Memphis-TN", "Merced-CA", "Miami-FL", "Midland-TX", "Milwaukee-WI", "Minneapolis-MN", "Missoula-MT", "Mobile-AL", "Modesto-CA", "Monroe-LA", "Montgomery-AL", "Muncie-IN", "Myrtle Beach-SC", "Naples-FL", "Nashville-TN", "New Orleans-LA", "New York-NY", "New-London-CT", "Normal-IL", "Oakland-CA", "Ocala-FL", "Oklahoma City-OK", "Omaha-NE", "Orlando-FL", "Owensboro-KY", "Panama-City-FL", "Parkersburg-WV", "Pensacola-FL", "Peoria-IL", "Philadelphia-PA", "Phoenix-AZ", "Pine Bluff-AR", "Pittsburgh-PA", "Pittsfield-MA", "Pocatello-ID", "Portland-ME", "Portland-OR", "Providence-RI", "Provo-UT", "Pueblo-CO", "Punta-Gorda-FL", "Raleigh-NC", "Rapid City-SD", "Reading-PA", "Redding-CA", "Reno-NV", "Richland-WA", "Richmond-VA", "Roanoke-VA", "Rochester-MN", "Rochester-NY", "Rockford-IL", "Rocky-Mount-NC", "Sacramento-CA", "Saginaw-MI", "Salinas-CA", "Salt Lake City-UT", "San Antonio-TX", "San Diego-CA", "San Francisco-CA", "San-Angelo-TX", "San-Luis-Obispo-CA", "Santa-Barbara-CA", "Santa-Fe-NM", "Sarasota-FL", "Savannah-GA", "Scranton-PA", "Seattle-WA", "Sharon-PA", "Sheboygan-WI", "Sherman-TX", "Shreveport-LA", "Sioux Falls-SD", "Sioux-City-IA", "South Bend-IN", "Spokane-WA", "Springfield-IL", "Springfield-MA", "Springfield-MO", "St. Louis-MO", "State College-PA", "Steubenville-OH", "Stockton-CA", "Sumter-SC", "Syracuse-NY", "Tallahassee-FL", "Tampa-FL", "Temple-TX", "Terre-Haute-IN", "Texarkana-TX", "Toledo-OH", "Topeka-KS", "Tucson-AZ", "Tulsa-OK", "Tuscaloosa-AL", "Tyler-TX", "Utica-NY", "Victoria-TX", "Virginia Beach-VA", "Visalia-CA", "Waco-TX", "Washington-DC", "Waterloo-IA", "Wausau-WI", "West Palm Beach-FL", "Wheeling-WV", "Wichita Falls-TX", "Wichita-KS", "Williamsport-PA", "Wilmington-NC", "Winston-Salem-NC", "Yakima-WA", "Youngstown-OH", "Yuba-City-CA", "Yuma-AZ"
+        ];
+
+        const grid = document.getElementById('cityGrid');
+        cities.forEach(city => {
+            const displayName = city.replace('-', ', ');
+            const card = document.createElement('a');
+            card.className = 'city-card';
+            card.href = `viewer.html?city=${city}`;
+            card.textContent = displayName;
+            grid.appendChild(card);
+        });
+    </script>
+</body>
+</html>
